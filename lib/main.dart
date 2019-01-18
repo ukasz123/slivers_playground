@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:slivers_playground/hanger.dart';
 import 'package:slivers_playground/sliver_diagnostic.dart';
 
 List<Color> colorsSet = [
@@ -108,6 +109,7 @@ class _SliversPlaygroundState extends State<SliversPlayground> {
         ),
         Expanded(
           child: CustomScrollView(
+            scrollDirection: Axis.horizontal,
             slivers: List.generate(sliversCount, (i) => i)
                 .map((i) => _buildSliverListItem(context, i))
                 .toList(),
@@ -196,12 +198,15 @@ class _SliversPlaygroundState extends State<SliversPlayground> {
             constraintsData: data.constraintsData,
             geometryData: data.geometryData));
       },
-      sliver: SliverToBoxAdapter(
-        child: SizedBox(
-          height: 100.0,
-          child: Container(
-            color: _pickColor(i),
-            child: Center(child: Text("Index: $i")),
+      sliver: SliverHanger(
+        child: Center(
+          child: SizedBox(
+            width: 100.0,
+            height: 100.0,
+            child: Container(
+              color: _pickColor(i),
+              child: Center(child: Text("Index: $i")),
+            ),
           ),
         ),
       ),
