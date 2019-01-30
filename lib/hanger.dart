@@ -21,7 +21,16 @@ class RenderSliverHanger extends RenderSliverToBoxAdapter {
       geometry = SliverGeometry.zero;
       return;
     }
-    child.layout(constraints.asBoxConstraints(), parentUsesSize: true);
+    var boxConstraints = constraints.asBoxConstraints();
+    switch (constraints.axis) {
+      case Axis.horizontal:
+        boxConstraints = boxConstraints.copyWith(minHeight: 0.0);
+        break;
+      case Axis.vertical:
+        boxConstraints = boxConstraints.copyWith(minWidth: 0.0);
+        break;
+    }
+    child.layout(boxConstraints, parentUsesSize: true);
     double childExtent;
     switch (constraints.axis) {
       case Axis.horizontal:
@@ -51,7 +60,7 @@ class RenderSliverHanger extends RenderSliverToBoxAdapter {
         (constraints.remainingPaintExtent - 0.5 * paintedChildSize) /
             constraints.viewportMainAxisExtent;
     final distanceFromMiddle = distanceFromEnd - 0.5;
-    final rotation = distanceFromMiddle * math.pi / 180 * 5;
+    final rotation = distanceFromMiddle * math.pi / 180 * 15;
 
     assert(paintedChildSize.isFinite);
     assert(paintedChildSize >= 0.0);
@@ -69,9 +78,10 @@ class RenderSliverHanger extends RenderSliverToBoxAdapter {
     final SliverHangerParentData childParentData = child.parentData;
     childParentData.rotation = rotation;
     childParentData.translationY =
-        (0.5 - abs(distanceFromMiddle)) * crossAxisChildExtent * 0.05;
+        (0.5 - abs(distanceFromMiddle)) * crossAxisChildExtent * 0.1;
+    childParentData.size = Size(paintedChildSize, crossAxisChildExtent);
     print(
-        "rotation = ${childParentData.rotation}, translationY = ${childParentData.translationY}");
+        "rotation = ${childParentData.rotation}, translationY = ${childParentData.translationY}, size = ${childParentData.size}");
   }
 
   double abs(double v) => v < 0 ? -v : v;
@@ -90,13 +100,13 @@ class RenderSliverHanger extends RenderSliverToBoxAdapter {
           true,
           childParentData.paintOffset + offset,
           Matrix4.identity()
-            ..translate(childParentData.paintOffset.dx / 2,
-                childParentData.paintOffset.dy / 2)
-            ..setRotationZ(childParentData.rotation)
-            ..translate(0.0, childParentData?.translationY ?? 0.0, 0.0)
-            ..translate(-childParentData.paintOffset.dx / 2,
-                -childParentData.paintOffset.dy / 2), (context, offset) {
-        context.paintChild(child, offset + childParentData.paintOffset);
+            ..translate(
+                childParentData.size.width / 2, childParentData.size.height / 2)
+            ..translate(0.0, childParentData.translationY ?? 0.0, 0.0)
+            ..rotateZ(childParentData.rotation)
+            ..translate(-childParentData.size.width / 2,
+                -childParentData.size.height / 2), (context, offset) {
+        context.paintChild(child, offset);
       });
     }
   }
@@ -105,6 +115,8 @@ class RenderSliverHanger extends RenderSliverToBoxAdapter {
 class SliverHangerParentData extends SliverPhysicalParentData {
   double rotation = 0.0;
   double translationY = 0.0;
+
+  Size size;
 
   @override
   void applyPaintTransform(Matrix4 transform) {

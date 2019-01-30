@@ -107,12 +107,24 @@ class _SliversPlaygroundState extends State<SliversPlayground> {
             ),
           ),
         ),
-        Expanded(
+        SizedBox(
+          height: 200,
           child: CustomScrollView(
             scrollDirection: Axis.horizontal,
-            slivers: List.generate(sliversCount, (i) => i)
-                .map((i) => _buildSliverListItem(context, i))
-                .toList(),
+            slivers: <Widget>[
+              SliverToBoxAdapter(
+                  child: SizedBox(
+                width: 80,
+              ))
+            ]
+                .followedBy(List.generate(sliversCount, (i) => i)
+                    .map((i) => _buildSliverListItem(context, i)))
+                .followedBy([
+              SliverToBoxAdapter(
+                  child: SizedBox(
+                width: 80,
+              ))
+            ]).toList(),
           ),
         ),
       ],
@@ -191,6 +203,7 @@ class _SliversPlaygroundState extends State<SliversPlayground> {
   }
 
   Widget _buildSliverListItem(BuildContext context, int i) {
+    final dotSize = Size(5, 5);
     return SliverDiagnostic(
       onDiagnosticData: (data) {
         _sliversData.sink.add(_IndexedMetadata(
@@ -199,14 +212,60 @@ class _SliversPlaygroundState extends State<SliversPlayground> {
             geometryData: data.geometryData));
       },
       sliver: SliverHanger(
-        child: Center(
-          child: SizedBox(
-            width: 100.0,
-            height: 100.0,
-            child: Container(
-              color: _pickColor(i),
-              child: Center(child: Text("Index: $i")),
-            ),
+        child: SizedBox(
+          width: 160.0,
+          height: 160.0,
+          child: Stack(
+            children: <Widget>[
+              Container(
+                color: _pickColor(i),
+                child: Center(child: Text("Index: $i")),
+              ),
+              Positioned(
+                top: 5.0,
+                left: 5.0,
+                child: DecoratedBox(
+                  decoration: ShapeDecoration(
+                    shape: CircleBorder(),
+                    color: Colors.redAccent,
+                  ),
+                  child: SizedBox.fromSize(size: dotSize),
+                ),
+              ),
+              Positioned(
+                bottom: 5.0,
+                right: 5.0,
+                child: DecoratedBox(
+                  decoration: ShapeDecoration(
+                    shape: CircleBorder(),
+                    color: Colors.greenAccent,
+                  ),
+                  child: SizedBox.fromSize(size: dotSize),
+                ),
+              ),
+              Positioned(
+                top: 5.0,
+                right: 5.0,
+                child: DecoratedBox(
+                  decoration: ShapeDecoration(
+                    shape: CircleBorder(),
+                    color: Colors.grey.shade700,
+                  ),
+                  child: SizedBox.fromSize(size: dotSize),
+                ),
+              ),
+              Positioned(
+                bottom: 5.0,
+                left: 5.0,
+                child: DecoratedBox(
+                  decoration: ShapeDecoration(
+                    shape: CircleBorder(),
+                    color: Colors.grey.shade700,
+                  ),
+                  child: SizedBox.fromSize(size: dotSize),
+                ),
+              ),
+            ],
           ),
         ),
       ),
