@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:slivers_playground/sliver_diagnostic.dart';
-
+import 'package:slivers_playground/transform_pg.dart';
 
 List<Color> colorsSet = [
   Colors.brown,
@@ -33,11 +33,17 @@ Color _pickColor(int index) => colorsSet[index % colorsSet.length];
 String _formatDouble(double value) => value.toStringAsFixed(2);
 
 void main() {
-  
-   runApp(new MyApp());
+  runApp(new MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  MyApp();
+
+  factory MyApp.forDesignTime() {
+    // TODO: add arguments
+    return new MyApp();
+  }
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -50,35 +56,45 @@ class MyApp extends StatelessWidget {
         body: PageView(
           children: [
             SafeArea(child: SliversPlayground()),
-            CustomScrollView(
-                          slivers:<Widget>[ SliverFixedExtentList(
-                itemExtent: 120,
-                delegate: SliverChildBuilderDelegate((context, index) {
-                  return Container(
-                    color: _pickColor(index),
-                    child: Center(
-                      child: Text("$index"),
-                    ),
-                  );
-                }),
-              ),],
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: ListWheelScrollView(
-                diameterRatio: 1.5,
-                physics: FixedExtentScrollPhysics(),
-                controller: FixedExtentScrollController(),
-                clipToSize: false,
-                itemExtent: 120,
-                children: List.generate(30, (i)=>i).map((i) => Container(
-                      color: Color.fromRGBO(300, 300, 300, double.negativeInfinity),
-                      child: Center(
-                        child: Text("$i"),
-                      ),
-                    )).toList(),
+//            CustomScrollView(
+//              slivers: <Widget>[
+//                SliverFixedExtentList(
+//                  itemExtent: 120,
+//                  delegate: SliverChildBuilderDelegate((context, index) {
+//                    return Container(
+//                      color: _pickColor(index),
+//                      child: Center(
+//                        child: Text("$index"),
+//                      ),
+//                    );
+//                  }),
+//                ),
+//              ],
+//            ),
+//            Padding(
+//              padding: const EdgeInsets.symmetric(horizontal: 8),
+//              child: ListWheelScrollView(
+//                diameterRatio: 1.5,
+//                physics: FixedExtentScrollPhysics(),
+//                controller: FixedExtentScrollController(),
+//                clipToSize: false,
+//                itemExtent: 120,
+//                children: List.generate(30, (i) => i)
+//                    .map((i) => Container(
+//                          color: _pickColor(i),
+//                          child: Center(
+//                            child: Text("$i"),
+//                          ),
+//                        ))
+//                    .toList(),
+//              ),
+//            ),
+            SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.all(8),
+                child: TransformPlayground(),
               ),
-            ),
+            )
           ],
         ),
       ),
