@@ -162,13 +162,13 @@ class _SliversPlaygroundState extends State<SliversPlayground> {
             ),
           ),
         ),
-        SizedBox(
-          height: 200,
+        Expanded(
           child: CustomScrollView(
             scrollDirection: Axis.horizontal,
             slivers: <Widget>[
               SliverToBoxAdapter(
                   child: SizedBox(
+                height: 80,
                 width: 80,
               ))
             ]
@@ -177,6 +177,7 @@ class _SliversPlaygroundState extends State<SliversPlayground> {
                 .followedBy([
               SliverToBoxAdapter(
                   child: SizedBox(
+                height: 80,
                 width: 80,
               ))
             ]).toList(),
